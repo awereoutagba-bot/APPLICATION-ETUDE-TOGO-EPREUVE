@@ -1,0 +1,113 @@
+// Schéma de la base de données - Etude Togo
+// Dev : SQLite (fichier local, zéro configuration)
+// Prod : remplacer provider par "postgresql" et DATABASE_URL par une URL Postgres (Railway, Render, Supabase...)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  motDePasse    String
+  nom           String
+  prenom        String
+  role          String   @default("ELEVE")
+  niveau        String? // ex: 3e, Tle D  (pertinent si ELEVE)
+  matiere       String? // ex: Mathématiques (pertinent si ENSEIGNANT)
+  etablissement String?
+  createdAt     DateTime @default(now())
+
+  epreuves      Epreuve[]      @relation("EpreuvesPubliees")
+  documents     Document[]     @relation("DocumentsPublies")
+  favoris       Favori[]
+  progressionAPC ProgressionAPC[]
+}
+
+model Epreuve {
+  id             String      @id @default(uuid())
+  titre          String
+  matiere        String
+  niveau         String // 6e, 5e, 4e, 3e, 2nde, 1ere, Tle...
+  serie          String? // A4, C, D, G2... (utile pour le Bac)
+  annee          Int
+  type           String
+  region         String? // région/ville d'origine de l'épreuve si connue
+  description    String?
+  cheminFichier  String
+  nomFichierOrig String
+  telechargements Int        @default(0)
+  createdAt      DateTime    @default(now())
+
+  auteurId String
+  auteur   User   @relation("EpreuvesPubliees", fields: [auteurId], references: [id])
+
+  favoris  Favori[]
+}
+
+model Document {
+  id             String            @id @default(uuid())
+  titre          String
+  matiere        String
+  niveau         String
+  categorie      String
+  description    String?
+  cheminFichier  String
+  nomFichierOrig String
+  telechargements Int              @default(0)
+  createdAt      DateTime          @default(now())
+
+  auteurId String
+  auteur   User   @relation("DocumentsPublies", fields: [auteurId], references: [id])
+
+  favoris Favori[]
+}
+
+model Favori {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  epreuveId String?
+  epreuve   Epreuve? @relation(fields: [epreuveId], references: [id])
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id])
+
+  @@unique([userId, epreuveId, documentId])
+}
+
+// Guide APC : contenu pédagogique structuré en modules pour former les enseignants
+// à l'Approche Par Compétences (programme en vigueur au Togo)
+model ModuleAPC {
+  id          String   @id @default(uuid())
+  ordre       Int      @unique
+  titre       String
+  resume      String
+  contenu     String // markdown
+  dureeMin    Int      @default(15) // durée de lecture estimée en minutes
+  createdAt   DateTime @default(now())
+
+  progressions ProgressionAPC[]
+}
+
+model ProgressionAPC {
+  id        String   @id @default(uuid())
+  termine   Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  moduleId String
+  module   ModuleAPC @relation(fields: [moduleId], references: [id])
+
+  @@unique([userId, moduleId])
+}

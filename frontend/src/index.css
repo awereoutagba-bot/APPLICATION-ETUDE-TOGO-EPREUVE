@@ -1,0 +1,218 @@
+@import "tailwindcss";
+
+/*
+  Direction artistique — Etude Togo
+  Sujet : partage d'épreuves/documents scolaires + formation des enseignants à l'APC (Togo).
+  Signature : le "tampon" (cachet d'encre) utilisé pour marquer le type d'épreuve,
+  inspiré des cachets qu'un surveillant appose sur une copie ou un carnet de notes.
+  Fond : papier kraft + trame quadrillée façon cahier d'écolier.
+*/
+
+@theme {
+  --color-tableau: #22392e; /* vert tableau noir - primaire sombre */
+  --color-tableau-clair: #2f4d3f;
+  --color-kraft: #efe6d0; /* papier kraft - fond principal */
+  --color-kraft-fonce: #e4d8b8;
+  --color-craie: #fbf8f1; /* blanc craie - surfaces claires / cartes */
+  --color-encre: #241f1a; /* charbon - texte */
+  --color-rouge-encre: #b23a2e; /* rouge de correction - accent */
+  --color-rouge-encre-clair: #d4574a;
+  --color-ocre: #c68a1f; /* ocre - accent secondaire */
+  --color-ocre-clair: #e0ab4d;
+
+  --font-display: "Bitter", "Georgia", serif;
+  --font-body: "Work Sans", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-encre);
+  font-family: var(--font-body);
+  margin: 0;
+  background: radial-gradient(circle at top left, rgba(34, 57, 46, 0.12), transparent 18%),
+    radial-gradient(circle at 85% 5%, rgba(178, 58, 46, 0.12), transparent 12%),
+    linear-gradient(180deg, #f8f7ef 0%, #e8f2e6 100%);
+  background-attachment: fixed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ocre);
+  outline-offset: 3px;
+}
+
+/* Le "tampon" — élément signature réutilisé pour les statuts et types d'épreuve */
+.tampon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35em 0.75em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  white-space: nowrap;
+  transform: none;
+}
+
+.tampon--rouge {
+  color: var(--color-rouge-encre);
+}
+
+.tampon--vert {
+  color: var(--color-tableau-clair);
+}
+
+.tampon--ocre {
+  color: var(--color-ocre);
+}
+
+/* Cartes plus lisses, ombres douces */
+.fiche {
+  background: linear-gradient(180deg, #ffffff 0%, #f8f6f0 100%);
+  border: 1px solid rgba(34, 57, 46, 0.08);
+  border-radius: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 50px rgba(34, 57, 46, 0.08);
+}
+
+.fiche::after {
+  display: none;
+}
+
+.trait-marge {
+  border-left: 3px solid var(--color-rouge-encre-clair);
+  padding-left: 0.9rem;
+}
+
+.scrollbar-fine::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+.scrollbar-fine::-webkit-scrollbar-thumb {
+  background: var(--color-kraft-fonce);
+  border-radius: 4px;
+}
+
+.champ {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(34, 57, 46, 0.14);
+  background: #fbfbfa;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+  color: var(--color-encre);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.champ:focus {
+  border-color: rgba(34, 57, 46, 0.3);
+  box-shadow: 0 0 0 4px rgba(34, 57, 46, 0.08);
+}
+
+.flag-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, #d52913 0%, #d52913 40%, transparent 40%, transparent 100%),
+    linear-gradient(0deg, #006a2e 0%, #006a2e 20%, #fcd116 20%, #fcd116 40%, #006a2e 40%, #006a2e 60%, #fcd116 60%, #fcd116 80%, #006a2e 80%, #006a2e 100%);
+  box-shadow: 0 16px 34px rgba(34, 57, 46, 0.18);
+}
+.flag-badge::before {
+  content: "★";
+  position: absolute;
+  left: 18%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.95rem;
+  color: #fff;
+  line-height: 1;
+}
+
+.site-footer {
+  margin-top: 5rem;
+  background: radial-gradient(circle at top left, rgba(30, 74, 35, 0.94), rgba(184, 41, 24, 0.92) 40%);
+  color: var(--color-craie);
+}
+
+.site-footer a {
+  color: var(--color-craie);
+}
+
+.contenu-apc h2 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--color-tableau);
+  margin-top: 1.75rem;
+  margin-bottom: 0.6rem;
+}
+.contenu-apc h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+.contenu-apc p {
+  margin-bottom: 0.9rem;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+.contenu-apc ul, .contenu-apc ol {
+  margin: 0 0 0.9rem 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.contenu-apc li {
+  margin-bottom: 0.3rem;
+}
+.contenu-apc strong {
+  color: var(--color-tableau);
+}
+.contenu-apc em {
+  color: var(--color-rouge-encre);
+  font-style: italic;
+}
+.contenu-apc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+}
+.contenu-apc th, .contenu-apc td {
+  border: 1px solid var(--color-kraft-fonce);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.contenu-apc th {
+  background: var(--color-kraft);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
